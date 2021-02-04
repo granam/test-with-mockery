@@ -16,8 +16,9 @@ matrix:
 before_script:
   - composer update --no-interaction --prefer-dist
   - PHP_NIGHTLY=$([[ `php -v` =~ '^PHP [0-9]+[.][0-9]+[.][0-9]+-dev' ]] && echo yes || echo '')
+  - echo $PHP_NIGHTLY
   - |
-    if [[ $PHP_NIGHTLY ]]
+    if [[ $PHP_NIGHTLY = 'yes' ]]
     then
       echo 'Downloading Codeclimate reporter...'
       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter \
@@ -27,7 +28,7 @@ before_script:
 
 script:
   - |
-    if [[ $PHP_NIGHTLY ]]
+    if [[ $PHP_NIGHTLY = 'yes' ]]
     then
       echo WITH_COVERAGE && php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover --coverage-text build/logs/clover.xml
       TEST_EXIT_CODE=$?
