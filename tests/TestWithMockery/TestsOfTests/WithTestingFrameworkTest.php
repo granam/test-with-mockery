@@ -144,4 +144,17 @@ class WithTestingFrameworkTest extends TestWithMockery
         $mock->allows('resetGregorianCalendar');
     }
 
+    /**
+     * @test
+     * @backupStaticAttributes
+     */
+    public function Custom_non_existing_method_check_is_still_needed()
+    {
+        \Mockery::setGenerator(\Mockery::getDefaultGenerator());
+        self::assertIsNotCallable([\DateTime::class, 'resetGregorianCalendar'], 'Seems our "non-existing" method exists in fact');
+        $mock = \Mockery::mock(\DateTime::class);
+        $updatedMock = $mock->allows('resetGregorianCalendar');
+        self::assertNotEmpty($updatedMock, 'Seems something changed - but without exception...?');
+    }
+
 }
