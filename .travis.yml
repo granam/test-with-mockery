@@ -19,8 +19,8 @@ before_script:
   - |
     if [[ $PHP_NIGHTLY=yes ]]
     then
-      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-      && chmod +x ./cc-test-reporter
+      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter \
+      && chmod +x ./cc-test-reporter \
       && ./cc-test-reporter before-build
     fi
 
@@ -28,7 +28,7 @@ script:
   - |
     if [[ $PHP_NIGHTLY=yes ]]
     then
-      echo WITH_COVERAGE && php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml
+      echo WITH_COVERAGE && php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml \
       && if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --coverage-input-type clover --exit-code $TRAVIS_TEST_RESULT; fi;
     else
       echo JUST_TESTS && ./vendor/bin/phpunit -v;
