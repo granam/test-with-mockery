@@ -6,37 +6,38 @@ env:
 language: php
 php:
   - nightly
-  - 8.0
-  - 7.4
-  - 7.3
+#  - 8.0
+#  - 7.4
+#  - 7.3
 matrix:
   allow_failures:
     - php: nightly
 
 before_script:
   - composer update --no-interaction --prefer-dist
-  - PHP_NIGHTLY=$([[ `php -v` =~ '^PHP [0-9]+[.][0-9]+[.][0-9]+-dev' ]] && echo yes || echo '')
+  - PHP_NIGHTLY=$([[ `php -v` =~ '^PHP\s+[0-9]+[.][0-9]+[.][0-9]+-dev' ]] && echo yes || echo '')
   - echo $PHP_NIGHTLY
-  - |
-    if [[ $PHP_NIGHTLY = 'yes' ]]
-    then
-      echo 'Downloading Codeclimate reporter...'
-      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter \
-      && chmod +x ./cc-test-reporter \
-      && ./cc-test-reporter before-build
-    fi
-
-script:
-  - |
-    if [[ $PHP_NIGHTLY = 'yes' ]]
-    then
-      echo WITH_COVERAGE && php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover --coverage-text build/logs/clover.xml
-      TEST_EXIT_CODE=$?
-      if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TEST_EXIT_CODE" = 0]
-      then
-        echo 'Sending coverage to Codeclimate'
-        ./cc-test-reporter after-build --coverage-input-type clover
-      fi
-    else
-      echo JUST_TESTS && ./vendor/bin/phpunit -v;
-    fi
+#  - |
+#    if [[ $PHP_NIGHTLY = 'yes' ]]
+#    then
+#      echo 'Downloading Codeclimate reporter...'
+#      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter \
+#      && chmod +x ./cc-test-reporter \
+#      && ./cc-test-reporter before-build
+#    fi
+#
+#script:
+#  - |
+#    if [[ $PHP_NIGHTLY = 'yes' ]]
+#    then
+#      echo WITH_COVERAGE && php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover --coverage-text build/logs/clover.xml
+#      TEST_EXIT_CODE=$?
+#      if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TEST_EXIT_CODE" = 0]
+#      then
+#        echo 'Sending coverage to Codeclimate'
+#        ./cc-test-reporter after-build --coverage-input-type clover
+#      fi
+#    else
+#      echo JUST_TESTS && ./vendor/bin/phpunit -v;
+#    fi
+#
