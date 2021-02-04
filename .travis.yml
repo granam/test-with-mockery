@@ -15,7 +15,7 @@ matrix:
 
 before_script:
   - composer update --no-interaction --prefer-dist
-  - PHP_NIGHTLY=$([[ `php -v` =~ '^PHP [0-9]+[.][0-9]+[.][0-9]+-dev' ]] && echo yes)
+  - PHP_NIGHTLY=$([[ `php -v` =~ '^PHP [0-9]+[.][0-9]+[.][0-9]+-dev' ]] && echo yes || echo '')
   - |
     if [[ $PHP_NIGHTLY ]]
     then
