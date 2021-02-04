@@ -9,8 +9,6 @@ php:
   - 8.0
   - 7.4
   - 7.3
-  - 7.2
-  - 7.1
 matrix:
   allow_failures:
     - php: nightly
@@ -24,4 +22,4 @@ before_script:
 
 script:
   - ./vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build  -t clover --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --input-type clover --exit-code $TRAVIS_TEST_RESULT; fi
