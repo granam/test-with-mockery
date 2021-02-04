@@ -15,14 +15,21 @@ matrix:
 
 before_script:
   - composer update --no-interaction --prefer-dist
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
+  - PHP_NIGHTLY=$([[ `php -v` =~ '^PHP [0-9]+[.][0-9]+[.][0-9]+-dev' ]] && echo yes || echo no)
+  - |
+    if [[ $PHP_NIGHTLY=yes ]]
+    then
+      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      && chmod +x ./cc-test-reporter
+      && ./cc-test-reporter before-build
+    fi
 
 script:
   - |
-    if [[ `php -v` =~ '^PHP [0-9]+[.][0-9]+[.][0-9]+-dev' ]]; then
-      php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml && if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --coverage-input-type clover --exit-code $TRAVIS_TEST_RESULT; fi;
+    if [[ $PHP_NIGHTLY=yes ]]
+    then
+      echo WITH_COVERAGE && php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml
+      && if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --coverage-input-type clover --exit-code $TRAVIS_TEST_RESULT; fi;
     else
-      ./vendor/bin/phpunit -v;
+      echo JUST_TESTS && ./vendor/bin/phpunit -v;
     fi
