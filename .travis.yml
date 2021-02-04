@@ -15,10 +15,11 @@ matrix:
 
 before_script:
   - composer update --no-interaction --prefer-dist
-  - PHP_NIGHTLY=$([[ `php -v` =~ '^PHP [0-9]+[.][0-9]+[.][0-9]+-dev' ]] && echo yes || echo no)
+  - PHP_NIGHTLY=$([[ `php -v` =~ '^PHP [0-9]+[.][0-9]+[.][0-9]+-dev' ]] && echo yes)
   - |
-    if [[ $PHP_NIGHTLY=yes ]]
+    if [[ $PHP_NIGHTLY ]]
     then
+      echo 'Downloading Codeclimate reporter...'
       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter \
       && chmod +x ./cc-test-reporter \
       && ./cc-test-reporter before-build
@@ -26,13 +27,14 @@ before_script:
 
 script:
   - |
-    if [[ $PHP_NIGHTLY=yes ]]
+    if [[ $PHP_NIGHTLY ]]
     then
-      echo WITH_COVERAGE && php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml
-      TEST_RESULT=$?
-      if [ "$TRAVIS_PULL_REQUEST" == "false" ]
+      echo WITH_COVERAGE && php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover --coverage-text build/logs/clover.xml
+      TEST_EXIT_CODE=$?
+      if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TEST_EXIT_CODE" = 0]
       then
-        ./cc-test-reporter after-build --coverage-input-type clover --exit-code $TEST_RESULT
+        echo 'Sending coverage to Codeclimate'
+        ./cc-test-reporter after-build --coverage-input-type clover
       fi
     else
       echo JUST_TESTS && ./vendor/bin/phpunit -v;
