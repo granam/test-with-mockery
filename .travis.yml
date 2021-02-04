@@ -20,5 +20,9 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --coverage-input-type clover --exit-code $TRAVIS_TEST_RESULT; fi
+  - |
+    if [[ `php -v` =~ '^PHP [0-9]+[.][0-9]+[.][0-9]+-dev' ]]; then
+      php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml && if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --coverage-input-type clover --exit-code $TRAVIS_TEST_RESULT; fi;
+    else
+      ./vendor/bin/phpunit -v;
+    fi
