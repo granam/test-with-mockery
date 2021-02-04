@@ -15,18 +15,10 @@ matrix:
 
 before_script:
   - composer update --no-interaction --prefer-dist
-  - |
-    echo 'Downloading Codeclimate reporter...'
-    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter \
-    && chmod +x ./cc-test-reporter \
-    && ./cc-test-reporter before-build
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 script:
-  - |
-    php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-clover --coverage-text build/logs/clover.xml
-    TEST_EXIT_CODE=$?
-    if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TEST_EXIT_CODE" = 0 ]
-    then
-      echo 'Sending coverage to Codeclimate'
-      ./cc-test-reporter after-build --coverage-input-type clover
-    fi
+  - php -dzend_extension=xdebug.so -dxdebug.mode=coverage  ./vendor/bin/phpunit -v --coverage-text --coverage-clover build/logs/clover.xml
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --coverage-input-type clover --exit-code $TRAVIS_TEST_RESULT; fi
