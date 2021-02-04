@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Granam\TestsOfTests;
+namespace Granam\Tests\TestWithMockery\TestsOfTests;
 
-use Granam\Tests\Exceptions\MockingOfNonExistingMethod;
-use Granam\Tests\TestWithMockery;
+use Granam\TestWithMockery\Exceptions\MockingOfNonExistingMethod;
+use Granam\TestWithMockery\TestWithMockery;
 use Mockery\MockInterface;
 
 class WithTestingFrameworkTest extends TestWithMockery
@@ -77,11 +77,11 @@ class WithTestingFrameworkTest extends TestWithMockery
     public function I_can_get_sut_class_from_current_test(): void
     {
         self::assertSame(
-            'Granam\TestsOfTests\WithTestingFramework',
+            'Granam\TestWithMockery\TestsOfTests\WithTestingFramework',
             self::getSutClass()
         );
         self::assertSame(
-            'Granam\TestsOfTests\WithTestingFramework',
+            'Granam\TestWithMockery\TestsOfTests\WithTestingFramework',
             self::getSutClass(__CLASS__)
         );
         self::assertSame(

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Granam\Tests;
+namespace Granam\TestWithMockery;
 
 use Mockery\Generator\MockConfiguration;
 use Mockery\Generator\StringManipulation\Pass\Pass;
@@ -20,7 +20,7 @@ class CalledMethodExistsPass implements Pass
     }
 
     /**
-     * Gives code of @see \Granam\Tests\CalledMethodExistsPass::guardMockedMethodsExists method
+     * Gives code of @see \Granam\TestWithMockery\CalledMethodExistsPass::guardMockedMethodsExists method
      * @return string
      */
     protected function getCodeOfGuardMockedMethodsExists(): string
@@ -53,7 +53,6 @@ class CalledMethodExistsPass implements Pass
         if ($testedInterface) {
             $testedInterfaces[] = $testedInterface;
         } else {
-            /** @noinspection PhpUnhandledExceptionInspection */
             $mockReflection = new \ReflectionClass($this);
             foreach ($mockReflection->getInterfaces() as $interface) {
                 if (is_a($interface->getName(), \Mockery\MockInterface::class, true)) {
@@ -70,7 +69,7 @@ class CalledMethodExistsPass implements Pass
                     continue 2; // next method to check
                 }
             }
-            throw new \Granam\Tests\Exceptions\MockingOfNonExistingMethod(
+            throw new \Granam\TestWithMockery\Exceptions\MockingOfNonExistingMethod(
                 "Method '{$methodName}' does not exist on tested object '"
                 . implode(',', $testedInterfaces) . "'"
                 . ' (use weakMockery() method if you really need to mock it)'

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Granam;
+namespace Granam\Tests\TestWithMockery;
 
-use Granam\Tests\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 use Mockery\MockInterface;
 
 class TestWithMockeryTest extends TestWithMockery

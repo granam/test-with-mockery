@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Granam\Tests;
+namespace Granam\TestWithMockery;
 
 use Mockery\Generator\CachingGenerator;
 use Mockery\Generator\StringManipulationGenerator;
@@ -93,7 +93,7 @@ abstract class TestWithMockery extends TestCase
      * @param string $regexp
      * @return string|TestWithMockery
      */
-    protected static function getSutClass(string $sutTestClass = null, string $regexp = '~^Tests\\\(.+)Test$~'): string
+    protected static function getSutClass(string $sutTestClass = null, string $regexp = '~Tests\\\(.+)Test$~'): string
     {
         return preg_replace($regexp, '$1', $sutTestClass ?: static::class);
     }
